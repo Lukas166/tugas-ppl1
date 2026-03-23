@@ -1,0 +1,66 @@
+name: CI
+run-name: CI by @${{ github.actor }} for commit [${{ github.sha }}]
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/testdb?schema=public
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U testuser -d testdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check (if present)
+        run: pnpm run --if-present format:check
+
+      - name: Apply migrations
+        run: pnpm prisma migrate deploy
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Build app
+        run: pnpm build
