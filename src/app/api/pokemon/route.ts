@@ -1,6 +1,220 @@
 import { prisma, CONDITION_VALUES, RARITY_VALUES } from "@/lib/prisma";
 import { errorResponse, successResponse } from "@/lib/response";
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ApiErrorResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: false
+ *         message:
+ *           type: string
+ *         errors:
+ *           nullable: true
+ *       required:
+ *         - success
+ *         - message
+ *     ApiPokemonCardResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *         data:
+ *           $ref: '#/components/schemas/PokemonCard'
+ *       required:
+ *         - success
+ *         - message
+ *         - data
+ *     ApiPokemonCardsResponse:
+ *       type: object
+ *       properties:
+ *         success:
+ *           type: boolean
+ *           example: true
+ *         message:
+ *           type: string
+ *         data:
+ *           type: array
+ *           items:
+ *             $ref: '#/components/schemas/PokemonCard'
+ *       required:
+ *         - success
+ *         - message
+ *         - data
+ *     PokemonCardInput:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         type:
+ *           type: string
+ *         hp:
+ *           type: integer
+ *           minimum: 1
+ *         attack:
+ *           type: integer
+ *           minimum: 1
+ *         rarity:
+ *           type: string
+ *           enum:
+ *             - COMMON
+ *             - UNCOMMON
+ *             - RARE
+ *             - HOLO_RARE
+ *             - DOUBLE_RARE
+ *             - ULTRA_RARE
+ *             - ILLUSTRATION_RARE
+ *             - SPECIAL_ILLUSTRATION_RARE
+ *             - HYPER_RARE
+ *             - SECRET_RARE
+ *         condition:
+ *           type: string
+ *           enum:
+ *             - MINT
+ *             - NEAR_MINT
+ *             - LIGHT_PLAYED
+ *             - HEAVILY_PLAYED
+ *             - DAMAGED
+ *         setName:
+ *           type: string
+ *         cardNumber:
+ *           type: string
+ *         artist:
+ *           type: string
+ *         price:
+ *           type: number
+ *           minimum: 0
+ *         description:
+ *           type: string
+ *       required:
+ *         - name
+ *         - type
+ *         - hp
+ *         - attack
+ *         - rarity
+ *         - condition
+ *         - setName
+ *         - cardNumber
+ *         - artist
+ *         - price
+ *     PokemonCard:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: integer
+ *         name:
+ *           type: string
+ *         type:
+ *           type: string
+ *         hp:
+ *           type: integer
+ *         attack:
+ *           type: integer
+ *         rarity:
+ *           type: string
+ *           enum:
+ *             - COMMON
+ *             - UNCOMMON
+ *             - RARE
+ *             - HOLO_RARE
+ *             - DOUBLE_RARE
+ *             - ULTRA_RARE
+ *             - ILLUSTRATION_RARE
+ *             - SPECIAL_ILLUSTRATION_RARE
+ *             - HYPER_RARE
+ *             - SECRET_RARE
+ *         condition:
+ *           type: string
+ *           enum:
+ *             - MINT
+ *             - NEAR_MINT
+ *             - LIGHT_PLAYED
+ *             - HEAVILY_PLAYED
+ *             - DAMAGED
+ *         setName:
+ *           type: string
+ *         cardNumber:
+ *           type: string
+ *         artist:
+ *           type: string
+ *         price:
+ *           oneOf:
+ *             - type: number
+ *             - type: string
+ *         description:
+ *           type: string
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *       required:
+ *         - name
+ *         - type
+ *         - hp
+ *         - attack
+ *         - rarity
+ *         - condition
+ *         - setName
+ *         - cardNumber
+ *         - artist
+ *         - price
+ */
+
+/**
+ * @swagger
+ * /api/pokemon:
+ *   get:
+ *     summary: Get all pokemon cards
+ *     tags: [Pokemon]
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiPokemonCardsResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *   post:
+ *     summary: Create pokemon card
+ *     tags: [Pokemon]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PokemonCardInput'
+ *     responses:
+ *       201:
+ *         description: Created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiPokemonCardResponse'
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ */
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
