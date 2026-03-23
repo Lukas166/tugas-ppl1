@@ -13,9 +13,11 @@
     "@prisma/client": "^7.5.0",
     "dotenv": "^17.3.1",
     "next": "16.1.7",
+    "next-swagger-doc": "^0.4.1",
     "pg": "^8.20.0",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "swagger-ui-react": "^5.32.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
