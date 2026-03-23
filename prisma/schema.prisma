@@ -11,3 +11,40 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Condition {
+  MINT
+  NEAR_MINT
+  LIGHT_PLAYED
+  HEAVILY_PLAYED
+  DAMAGED
+}
+
+enum Rarity {
+  COMMON
+  UNCOMMON
+  RARE
+  HOLO_RARE
+  DOUBLE_RARE
+  ULTRA_RARE
+  ILLUSTRATION_RARE
+  SPECIAL_ILLUSTRATION_RARE
+  HYPER_RARE
+  SECRET_RARE
+}
+
+model PokemonCard {
+  id          Int       @id @default(autoincrement())
+  name        String
+  type        String
+  hp          Int
+  attack      Int
+  rarity      Rarity
+  condition   Condition
+  setName     String
+  cardNumber  String
+  artist      String
+  price       Decimal   @db.Decimal(10, 2)
+  description String?
+  createdAt   DateTime  @default(now())
+}

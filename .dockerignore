@@ -1,0 +1,9 @@
+node_modules
+.next
+.git
+.env
+docker_dev
+docker_prod
+dist
+coverage
+*.log

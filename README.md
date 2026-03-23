@@ -1,3 +1,6 @@
+[![CI](https://github.com/Lukas166/tugas-ppl1/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukas166/tugas-ppl1/actions/workflows/ci.yml)
+[![CS](https://github.com/Lukas166/tugas-ppl1/actions/workflows/cs.yml/badge.svg)](https://github.com/Lukas166/tugas-ppl1/actions/workflows/cs.yml)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
