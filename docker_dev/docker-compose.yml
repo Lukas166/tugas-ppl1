@@ -1,0 +1,62 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker_dev/Dockerfile
+    container_name: tugas-ppl1-dev-app
+    env_file:
+      - ../.env
+    environment:
+      NODE_ENV: development
+      CI: "true"
+    ports:
+      - "3000:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "pnpm prisma migrate deploy && pnpm dev --hostname 0.0.0.0 --port 3000"
+    volumes:
+      - ../:/app
+      - app_node_modules:/app/node_modules
+      - app_next:/app/.next
+
+  db:
+    image: postgres:17-alpine
+    container_name: tugas-ppl1-dev-db
+    env_file:
+      - ../.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-pokemon_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - dev_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  studio:
+    build:
+      context: ..
+      dockerfile: docker_dev/Dockerfile
+    container_name: tugas-ppl1-dev-studio
+    env_file:
+      - ../.env
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "pnpm prisma migrate deploy && pnpm prisma studio --port 51212 --browser none"
+    ports:
+      - "51212:51212"
+    volumes:
+      - ../:/app
+      - app_node_modules:/app/node_modules
+
+volumes:
+  dev_pgdata:
+  app_node_modules:
+  app_next:
