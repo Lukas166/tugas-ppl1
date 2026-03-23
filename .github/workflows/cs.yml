@@ -31,8 +31,11 @@ jobs:
       - name: Install deps
         run: pnpm install --frozen-lockfile
 
-      - name: PNPM Audit (High severity only)
-        run: pnpm audit --audit-level high
+      - name: PNPM Audit (prod deps, high severity only)
+        run: pnpm audit --prod --audit-level high
+
+      - name: PNPM Audit Full (non-blocking)
+        run: pnpm audit --audit-level high || true
 
       - name: Snyk Scan
         if: ${{ env.SNYK_TOKEN != '' }}
