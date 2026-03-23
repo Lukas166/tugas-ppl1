@@ -1,39 +1,46 @@
 [![CI](https://github.com/Lukas166/tugas-ppl1/actions/workflows/ci.yml/badge.svg)](https://github.com/Lukas166/tugas-ppl1/actions/workflows/ci.yml)
 [![CS](https://github.com/Lukas166/tugas-ppl1/actions/workflows/cs.yml/badge.svg)](https://github.com/Lukas166/tugas-ppl1/actions/workflows/cs.yml)
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pokemon Card Collection API
 
-## Getting Started
+## 1. Project Description
 
-First, run the development server:
+This project is a REST API for managing a Pokemon card collection. The API supports full CRUD operations (Create, Read, Update, Delete), request validation, Prisma + PostgreSQL integration, and OpenAPI/Swagger documentation.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 2. API Documentation
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[API_Docs.md](API_Docs.md)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 3. Docker Installation Guide
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+[DockerDocs.md](DockerDocs.md)
 
-## Learn More
+## 4. Git Workflow
 
-To learn more about Next.js, take a look at the following resources:
+The branch usage can be seen at:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- [Branch List](https://github.com/Lukas166/tugas-ppl1/branches)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Branch types used in this project:
 
-## Deploy on Vercel
+1. `main`
+2. `develop`
+3. `chore/setup-project`
+4. `feat/ci-cd-cs`
+5. `feat/docker`
+6. `feat/pokemon-api`
+7. `feat/swagger`
+8. `feat/testing`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Conventional Commit usage can be verified at:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Commit History Main](https://github.com/Lukas166/tugas-ppl1/commits/main/)
+
+## 5. Automation Status (GitHub Actions)
+
+Workflows implemented:
+
+1. `CI`: installs dependencies, runs lint, Prisma migrate deploy, Prisma generate, tests, and build.
+2. `CS`: runs security scanning with dependency audit and Snyk (when token is available).
+3. `CD`: builds and pushes Docker images after CI succeeds.
+
