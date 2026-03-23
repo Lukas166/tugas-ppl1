@@ -1,6 +1,126 @@
 import { prisma, CONDITION_VALUES, RARITY_VALUES } from "@/lib/prisma";
 import { errorResponse, successResponse } from "@/lib/response";
 
+/**
+ * @swagger
+ * /api/pokemon/{id}:
+ *   get:
+ *     summary: Get pokemon card by ID
+ *     tags: [Pokemon]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Success
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiPokemonCardResponse'
+ *       400:
+ *         description: Invalid id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       404:
+ *         description: Pokemon card not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *   put:
+ *     summary: Update pokemon card
+ *     tags: [Pokemon]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/PokemonCardInput'
+ *     responses:
+ *       200:
+ *         description: Updated
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiPokemonCardResponse'
+ *       400:
+ *         description: Invalid id or request body
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       404:
+ *         description: Pokemon card not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *   delete:
+ *     summary: Delete pokemon card
+ *     tags: [Pokemon]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Deleted
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   nullable: true
+ *       400:
+ *         description: Invalid id
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       404:
+ *         description: Pokemon card not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ApiErrorResponse'
+ */
+
 type RouteContext = {
 	params: Promise<{ id: string }>;
 };
@@ -196,6 +316,16 @@ export async function PUT(request: Request, context: RouteContext) {
 			return errorResponse(parsedBody.message, 400);
 		}
 
+		const existingPokemonCard = await prisma.pokemonCard.findUnique({
+			where: {
+				id: parsedId,
+			},
+		});
+
+		if (!existingPokemonCard) {
+			return errorResponse("Pokemon card not found", 404);
+		}
+
 		const pokemonCard = await prisma.pokemonCard.update({
 			where: {
 				id: parsedId,
@@ -216,6 +346,16 @@ export async function DELETE(_: Request, context: RouteContext) {
 
 		if (!parsedId) {
 			return errorResponse("Invalid id", 400);
+		}
+
+		const existingPokemonCard = await prisma.pokemonCard.findUnique({
+			where: {
+				id: parsedId,
+			},
+		});
+
+		if (!existingPokemonCard) {
+			return errorResponse("Pokemon card not found", 404);
 		}
 
 		await prisma.pokemonCard.delete({
